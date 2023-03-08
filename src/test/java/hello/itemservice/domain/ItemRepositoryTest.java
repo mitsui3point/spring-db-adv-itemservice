@@ -13,6 +13,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * 가급적 인터페이스를 테스트하자.
+ * : 여기서는 MemoryItemRepository 구현체를 테스트 하는 것이 아니라 ItemRepository 인터페이스를 테스트하는 것을 확인할 수 있다.
+ *   인터페이스를 대상으로 테스트하면 향후 다른 구현체로 변경되었을 때 해당 구현체가 잘 동작하는지 같은 테스트로 편리하게 검증할 수 있다.
+ */
 @SpringBootTest
 class ItemRepositoryTest {
 
@@ -21,7 +26,7 @@ class ItemRepositoryTest {
 
     @AfterEach
     void afterEach() {
-        //MemoryItemRepository 의 경우 제한적으로 사용
+        //MemoryItemRepository 의 경우 제한적으로 사용, 실제 DB 사용시에는 Transaction rollback 사용
         if (itemRepository instanceof MemoryItemRepository) {
             ((MemoryItemRepository) itemRepository).clearStore();
         }
@@ -58,6 +63,9 @@ class ItemRepositoryTest {
         assertThat(findItem.getQuantity()).isEqualTo(updateParam.getQuantity());
     }
 
+    /**
+     * 검색키워드에 따른 아이템 목록 추출
+     */
     @Test
     void findItems() {
         //given
