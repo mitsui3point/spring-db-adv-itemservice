@@ -1,4 +1,4 @@
-package hello.itemservice.repository.jdbc;
+package hello.itemservice.repository.jdbctemplate;
 
 import hello.itemservice.domain.Item;
 import hello.itemservice.repository.ItemRepository;
@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
@@ -18,7 +17,6 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * {@link JdbcTemplate}
