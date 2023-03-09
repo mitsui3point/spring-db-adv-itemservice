@@ -47,12 +47,26 @@ class ItemRepositoryTest {
     @Autowired
     ItemRepository itemRepository;
 
+/*
+    @Autowired
+    PlatformTransactionManager transactionManager;
+
+    TransactionStatus status;
+
+    @BeforeEach
+    void setUp() {
+        //트랜잭션 시작
+        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+    }
+*/
+
     @AfterEach
     void afterEach() {
         //MemoryItemRepository 의 경우 제한적으로 사용, 실제 DB 사용시에는 Transaction rollback 사용
         if (itemRepository instanceof MemoryItemRepository) {
             ((MemoryItemRepository) itemRepository).clearStore();
         }
+//        transactionManager.rollback(status);
     }
 
     @Test
