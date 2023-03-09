@@ -5,10 +5,15 @@ import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
 import hello.itemservice.repository.memory.MemoryItemRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.List;
 
@@ -18,13 +23,37 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 가급적 인터페이스를 테스트하자.
  * : 여기서는 MemoryItemRepository 구현체를 테스트 하는 것이 아니라 ItemRepository 인터페이스를 테스트하는 것을 확인할 수 있다.
  *   인터페이스를 대상으로 테스트하면 향후 다른 구현체로 변경되었을 때 해당 구현체가 잘 동작하는지 같은 테스트로 편리하게 검증할 수 있다.
+ *
+ * {@link SpringBootTest}
+ * : {@link SpringBootApplication} 를 찾아서 설정값으로 사용한다.
+ *
+ * 테스트 진행시 중요한 원칙
+ * : 테스트는 다른 테스트와 격리해야 한다.
+ * : 테스트는 반복해서 실행할 수 있어야 한다.
+ *
+ * 해결방안
+ * 1. 테스트 전용 DB 분리
+ * : 테스트 시 없어야 할 web application data 들이 존재한다.
+ * : 실제 product code 가 축적한 data 와 분리 해야 한다.
+ * 2. 데이터 롤백
+ * : 각각의 테스트에서, 테스트 한 데이터를 롤백하게 되면 다른 테스트에 영향을 주지 않는다.
  */
 @SpringBootTest
-@Transactional
 class ItemRepositoryTest {
 
     @Autowired
     ItemRepository itemRepository;
+
+    @Autowired
+    PlatformTransactionManager transactionManager;
+
+    TransactionStatus status;
+
+    @BeforeEach
+    void setUp() {
+        //트랜잭션 시작
+        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+    }
 
     @AfterEach
     void afterEach() {
@@ -32,6 +61,7 @@ class ItemRepositoryTest {
         if (itemRepository instanceof MemoryItemRepository) {
             ((MemoryItemRepository) itemRepository).clearStore();
         }
+        transactionManager.rollback(status);
     }
 
     @Test
