@@ -37,23 +37,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  * : 실제 product code 가 축적한 data 와 분리 해야 한다.
  * 2. 데이터 롤백
  * : 각각의 테스트에서, 테스트 한 데이터를 롤백하게 되면 다른 테스트에 영향을 주지 않는다.
+ * 2.1. @Transaction
+ * : 1.set autocommit false -> 2.test 실행 -> 3.insert sql item1, item2, item3 저장 -> 4. select sql item1, item2, item3 반환 -> 5. Rollback -> 6. item1, item2, item3 롤백으로 제거
  */
+@Transactional
 @SpringBootTest
 class ItemRepositoryTest {
 
     @Autowired
     ItemRepository itemRepository;
-
-    @Autowired
-    PlatformTransactionManager transactionManager;
-
-    TransactionStatus status;
-
-    @BeforeEach
-    void setUp() {
-        //트랜잭션 시작
-        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-    }
 
     @AfterEach
     void afterEach() {
@@ -61,7 +53,6 @@ class ItemRepositoryTest {
         if (itemRepository instanceof MemoryItemRepository) {
             ((MemoryItemRepository) itemRepository).clearStore();
         }
-        transactionManager.rollback(status);
     }
 
     @Test
