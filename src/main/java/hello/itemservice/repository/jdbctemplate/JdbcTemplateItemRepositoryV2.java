@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
@@ -38,6 +39,7 @@ import java.util.Optional;
  * : NamedParameterJdbcTemplate 도 내부에 dataSource 가 필요하다.
  */
 @Slf4j
+@Repository
 public class JdbcTemplateItemRepositoryV2 implements ItemRepository {
 
     private final NamedParameterJdbcTemplate template;

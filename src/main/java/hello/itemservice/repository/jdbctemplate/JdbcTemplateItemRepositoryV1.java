@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
@@ -22,6 +23,7 @@ import java.util.Optional;
  * {@link JdbcTemplate}
  */
 @Slf4j
+@Repository
 public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
 
     private final JdbcTemplate template;
