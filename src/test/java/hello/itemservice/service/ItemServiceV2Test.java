@@ -5,21 +5,50 @@ import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
 import hello.itemservice.repository.v2.ItemQueryRepositoryV2;
 import hello.itemservice.repository.v2.ItemRepositoryV2;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
+@Slf4j
 @Transactional
 @SpringBootTest
+@Import(ItemServiceV2Test.V2TestConfig.class)
 class ItemServiceV2Test {
-
     @Autowired
     ItemServiceV2 itemService;
+
+    @TestConfiguration
+    @RequiredArgsConstructor
+    static class V2TestConfig {
+        private final EntityManager em;
+        private final ItemRepositoryV2 itemRepository;//SpringDataJPA
+
+        @Bean
+        public ItemService itemServiceV2Test() {
+            return new ItemServiceV2(itemRepository, itemQueryRepositoryV2Test());
+        }
+
+        @Bean
+        public ItemQueryRepositoryV2 itemQueryRepositoryV2Test() {
+            return new ItemQueryRepositoryV2(em);
+        }
+
+    }
 
     @Test
     void save() {

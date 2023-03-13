@@ -13,7 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+/**
+ * 예외 변환
+ * 스프링 데이터 JPA도 스프링 예외 추상화를 지원한다.
+ * 스프링 데이터 JPA가 만들어주는 프록시(SpringDataJpaItemRepository 의 구현체)에서 이미 예외 변환을 처리하기 때문에, @Repository 와 관계없이 예외가 변환된다.
+ */
+//@Repository
 @Transactional
 @RequiredArgsConstructor
 public class JpaItemRepositoryV2 implements ItemRepository {
